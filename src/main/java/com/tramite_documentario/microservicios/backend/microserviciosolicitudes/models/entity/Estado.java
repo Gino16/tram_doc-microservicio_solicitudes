@@ -14,6 +14,13 @@ public class Estado {
 
     private String nombre;
 
+    public Estado() {
+    }
+
+    public Estado(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

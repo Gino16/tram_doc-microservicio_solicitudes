@@ -1,18 +1,17 @@
 package com.tramite_documentario.microservicios.backend.microserviciosolicitudes.controllers;
 
 import com.tramite_documentario.microservicio.backend.commonpersonas.models.entity.Persona;
-import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.entity.EstadoSolicitud;
-import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.entity.PersonaSolicitud;
-import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.entity.Solicitud;
+import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.entity.*;
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.services.estadosolicitud.EstadoSolicitudService;
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.services.personasolicitud.PersonaSolicitudService;
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.services.solicitud.SolicitudService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,9 +28,43 @@ public class SolicitudController {
     @Autowired
     private EstadoSolicitudService estadoSolicitudService;
 
+    @PostMapping
+    public ResponseEntity<?> guardar(@RequestBody Solicitud solicitud){
+        Solicitud solicitudGuardada = service.save(solicitud);
+        PersonaSolicitud personaSolicitudEmisor = new PersonaSolicitud();
+        //Emisor
+        personaSolicitudEmisor.setPersona(solicitud.getPersonaEmisor());
+        personaSolicitudEmisor.setRol(new Rol(1L));
+        personaSolicitudEmisor.setSolicitud(solicitudGuardada);
+
+        //Receptor
+        List<PersonaSolicitud> personaSolicitudReceptores = new ArrayList<>();
+        solicitud.getPersonasReceptoras().forEach(persona -> {
+            PersonaSolicitud personaSolicitudReceptor = new PersonaSolicitud();
+            personaSolicitudReceptor.setPersona(persona);
+            personaSolicitudReceptor.setRol(new Rol(2L));
+            personaSolicitudReceptor.setSolicitud(solicitudGuardada);
+            personaSolicitudReceptores.add(personaSolicitudReceptor);
+        });
+
+        //Guardando emisor y receptor
+        personaSolicitudService.save(personaSolicitudEmisor);
+        personaSolicitudService.saveAll(personaSolicitudReceptores);
+
+        //Guardando primer estado, por default
+        EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
+        estadoSolicitud.setSolicitud(solicitudGuardada);
+        estadoSolicitud.setEstado(new Estado(1L));
+        estadoSolicitud.setDescripcion("Primer Guardado");
+        estadoSolicitud.setFecha(new Date());
+        estadoSolicitudService.save(estadoSolicitud);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(solicitudGuardada);
+    }
+
     @GetMapping
     public ResponseEntity<?> listar() {
-        List<Solicitud> solicitudes = service.findAll();
+        List<Solicitud> solicitudes = (List<Solicitud>) service.findAll();
         //Iterando sobre cada solicitud encontrada para formar JSON
         solicitudes.forEach(solicitud -> {
             //Asignando la persona emisor a la solicitud
