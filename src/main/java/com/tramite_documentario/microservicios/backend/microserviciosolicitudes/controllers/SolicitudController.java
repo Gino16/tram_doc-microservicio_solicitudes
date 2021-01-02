@@ -71,4 +71,9 @@ public class SolicitudController {
             return ResponseEntity.ok(solicitud);
         }
     }
+
+    @GetMapping("/tipo-solicitudes")
+    public ResponseEntity<?> getTipoSolicitudes(){
+        return ResponseEntity.ok(service.findAllTipoSolicitudes());
+    }
 }
