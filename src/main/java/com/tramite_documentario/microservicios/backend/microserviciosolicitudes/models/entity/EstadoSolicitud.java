@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -28,6 +29,7 @@ public class EstadoSolicitud {
     @Temporal(TemporalType.DATE)
     private Date fecha;
 
+    @NotNull
     private String descripcion;
 
     public Long getId() {

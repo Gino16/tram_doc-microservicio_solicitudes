@@ -8,12 +8,11 @@ import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import javax.validation.Valid;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,7 +28,12 @@ public class SolicitudController {
     private EstadoSolicitudService estadoSolicitudService;
 
     @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Solicitud solicitud){
+    public ResponseEntity<?> guardar(@Valid @RequestBody Solicitud solicitud, BindingResult result){
+
+        if (result.hasErrors()){
+            return this.validar(result);
+        }
+
         Solicitud solicitudGuardada = service.save(solicitud);
         PersonaSolicitud personaSolicitudEmisor = new PersonaSolicitud();
         //Emisor
@@ -108,5 +112,13 @@ public class SolicitudController {
     @GetMapping("/tipo-solicitudes")
     public ResponseEntity<?> getTipoSolicitudes(){
         return ResponseEntity.ok(service.findAllTipoSolicitudes());
+    }
+
+    private ResponseEntity<?> validar(BindingResult result){
+        Map<String, Object> errores = new HashMap<>();
+        result.getFieldErrors().forEach(fieldError -> {
+            errores.put(fieldError.getField(), "El campo " + fieldError.getField() + " " + fieldError.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errores);
     }
 }

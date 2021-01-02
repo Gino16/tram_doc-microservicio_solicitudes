@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tramite_documentario.microservicio.backend.commonpersonas.models.entity.Persona;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +17,10 @@ public class Solicitud {
     @Column(name = "id_solicitud")
     private Long id;
 
+    @NotEmpty
     private String descripcion;
 
+    @NotNull
     @JsonIgnoreProperties({"hibernateLazyInitializer"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_solicitud")
