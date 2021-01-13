@@ -3,19 +3,19 @@ package com.tramite_documentario.microservicios.backend.microserviciosolicitudes
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
-public class Rol {
+@Table(name = "rol_solicitudes")
+public class RolSolicitud {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rol")
+    @Column(name = "id_rol_solicitud")
     private Long id;
 
     private String nombre;
 
-    public Rol() {
+    public RolSolicitud() {
     }
 
-    public Rol(Long id) {
+    public RolSolicitud(Long id) {
         this.id = id;
     }
 

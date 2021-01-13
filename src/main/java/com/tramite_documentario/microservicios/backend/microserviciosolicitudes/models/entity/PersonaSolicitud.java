@@ -21,8 +21,8 @@ public class PersonaSolicitud {
     private Solicitud solicitud;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_rol")
-    private Rol rol;
+    @JoinColumn(name = "id_rol_solicitud")
+    private RolSolicitud rolSolicitud;
 
     public Long getId() {
         return id;
@@ -48,11 +48,11 @@ public class PersonaSolicitud {
         this.solicitud = solicitud;
     }
 
-    public Rol getRol() {
-        return rol;
+    public RolSolicitud getRolSolicitud() {
+        return rolSolicitud;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRolSolicitud(RolSolicitud rolSolicitud) {
+        this.rolSolicitud = rolSolicitud;
     }
 }
