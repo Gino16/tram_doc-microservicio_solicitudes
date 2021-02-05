@@ -74,7 +74,7 @@ public class SolicitudController {
 
         //De la lista obtenida le agrego su id de solicitud a la que pertenecen
         List<Archivo> archivosParaGuardar = archivosSinSolicitud.stream().map(archivo -> {
-            archivo.setIdSolicitud(solicitud.getId());
+            archivo.setIdSolicitud(solicitudGuardada.getId());
             return archivo;
         }).collect(Collectors.toList());
 
