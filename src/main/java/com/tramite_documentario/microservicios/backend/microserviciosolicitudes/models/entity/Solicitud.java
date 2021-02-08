@@ -2,6 +2,7 @@ package com.tramite_documentario.microservicios.backend.microserviciosolicitudes
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tramite_documentario.microservicio.backend.commonpersonas.models.entity.Persona;
+import com.tramite_documentario.microservicios.backend.commonarchivos.models.entity.Archivo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -37,8 +38,8 @@ public class Solicitud {
     private List<EstadoSolicitud> estadoSolicitudes;
 
 
-//    @Transient
-//    private List<EstadoSolicitud> estadoSolicitud;
+    @Transient
+    private List<Archivo> archivos;
 
     public Long getId() {
         return id;
@@ -87,5 +88,13 @@ public class Solicitud {
 
     public void setPersonasReceptoras(List<Persona> personasReceptoras) {
         this.personasReceptoras = personasReceptoras;
+    }
+
+    public List<Archivo> getArchivos() {
+        return archivos;
+    }
+
+    public void setArchivos(List<Archivo> archivos) {
+        this.archivos = archivos;
     }
 }

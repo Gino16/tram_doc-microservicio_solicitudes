@@ -99,6 +99,11 @@ public class SolicitudController {
             //Estableciendo las personas receptoras de cada solicitud
             solicitud.setPersonasReceptoras(personasReceptoras);
 
+            //Capturando los archivos anexados en solicitud
+            List<Archivo> archivos = archivoFeignClient.listarArchivosBySolicitud(solicitud.getId());
+
+            solicitud.setArchivos(archivos);
+
             //Capturando los estados de cada solicitud
             List<EstadoSolicitud> estadoSolicitudes = estadoSolicitudService.findEstadoSolicitudBySolicitudId(solicitud.getId());
             //Asignando los estados de solicitud a cada solicitud
@@ -120,6 +125,11 @@ public class SolicitudController {
                 return personaSolicitud.getPersona();
             }).collect(Collectors.toList());
             solicitud.setPersonasReceptoras(personasReceptoras);
+
+            //Capturando los archivos anexados en solicitud
+            List<Archivo> archivos = archivoFeignClient.listarArchivosBySolicitud(solicitud.getId());
+
+            solicitud.setArchivos(archivos);
 
             solicitud.setEstadoSolicitudes(estadoSolicitudService.findEstadoSolicitudBySolicitudId(solicitud.getId()));
 
