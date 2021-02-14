@@ -1,6 +1,7 @@
 package com.tramite_documentario.microservicios.backend.microserviciosolicitudes.services.estadosolicitud;
 
 import com.tramite_documentario.microservicio.backend.commonmicroservicios.services.CommonServiceImpl;
+import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.entity.Estado;
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.entity.EstadoSolicitud;
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.repository.EstadoSolicitudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,5 +15,10 @@ public class EstadoSolicitudServiceImpl extends CommonServiceImpl<EstadoSolicitu
     @Override
     public List<EstadoSolicitud> findEstadoSolicitudBySolicitudId(Long idSolicitud) {
         return repository.findEstadoSolicitudBySolicitudId(idSolicitud);
+    }
+
+    @Override
+    public Estado findEstadoById(Long idEstado){
+        return repository.findEstadoById(idEstado);
     }
 }

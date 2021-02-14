@@ -73,6 +73,10 @@ public class Solicitud {
         this.estadoSolicitudes = estadoSolicitudes;
     }
 
+    public void addEstadoSolicitud(EstadoSolicitud estadoSolicitud){
+        this.estadoSolicitudes.add(estadoSolicitud);
+    }
+
 
     public Persona getPersonaEmisor() {
         return personaEmisor;

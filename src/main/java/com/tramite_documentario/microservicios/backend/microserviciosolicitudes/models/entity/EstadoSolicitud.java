@@ -29,8 +29,12 @@ public class EstadoSolicitud {
     @Temporal(TemporalType.DATE)
     private Date fecha;
 
-    @NotNull
     private String descripcion;
+
+    @PrePersist
+    public void prePersist(){
+        this.fecha = new Date();
+    }
 
     public Long getId() {
         return id;
