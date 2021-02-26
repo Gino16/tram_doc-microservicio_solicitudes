@@ -10,6 +10,5 @@ import java.util.Optional;
 public interface SolicitudService extends CommonService<Solicitud> {
 
 
-
     public List<TipoSolicitud> findAllTipoSolicitudes();
 }
