@@ -102,7 +102,21 @@ public class SolicitudController {
             //Asignando los estados de solicitud a cada solicitud
             solicitud.setEstadoSolicitudes(estadoSolicitudes);
         });
-        return ResponseEntity.ok(solicitudes);
+        List<Solicitud> solicitudesFinal = new ArrayList<>();
+
+        for (Solicitud solicitud: solicitudes){
+            boolean esArchivado = false;
+            for (EstadoSolicitud estadoSolicitud: solicitud.getEstadoSolicitudes()){
+                if (estadoSolicitud.getEstado().getNombre().equals("Archivado")){
+                    esArchivado = true;
+                    break;
+                }
+            }
+            if (!esArchivado){
+                solicitudesFinal.add(solicitud);
+            }
+        }
+        return ResponseEntity.ok(solicitudesFinal);
     }
 
     private void setInfoArchivo(Solicitud solicitud){
@@ -200,7 +214,7 @@ public class SolicitudController {
             Solicitud solicitud = s.get();
             setInfoArchivo(solicitud);
             response.setContentType("application/pdf");
-            String headerKey = "";
+            String headerKey = " ";
             String headerValue = "attachment; filename=" + solicitud.getTipoSolicitud().getNombre() + "_" + solicitud.getPersonaEmisor().getNombre() + ".pdf";
             response.setHeader(headerKey, headerValue);
 
