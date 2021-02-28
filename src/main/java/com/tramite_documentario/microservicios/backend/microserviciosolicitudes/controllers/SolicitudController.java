@@ -214,7 +214,7 @@ public class SolicitudController {
             Solicitud solicitud = s.get();
             setInfoArchivo(solicitud);
             response.setContentType("application/pdf");
-            String headerKey = " ";
+            String headerKey = "";
             String headerValue = "attachment; filename=" + solicitud.getTipoSolicitud().getNombre() + "_" + solicitud.getPersonaEmisor().getNombre() + ".pdf";
             response.setHeader(headerKey, headerValue);
 
