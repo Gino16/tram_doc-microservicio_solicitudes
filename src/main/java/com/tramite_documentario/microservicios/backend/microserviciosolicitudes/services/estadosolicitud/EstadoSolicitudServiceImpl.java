@@ -21,4 +21,9 @@ public class EstadoSolicitudServiceImpl extends CommonServiceImpl<EstadoSolicitu
     public Estado findEstadoById(Long idEstado){
         return repository.findEstadoById(idEstado);
     }
+
+    @Override
+    public Estado findAllEstados() {
+        return repository.findAllEstados();
+    }
 }

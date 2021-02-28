@@ -205,7 +205,7 @@ public class SolicitudController {
 
     }
 
-    @GetMapping("/exportar/{id}")
+    @GetMapping({"/exportar/{id}", "/exportar/{id}/"})
     public void exportarPDF(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Optional<Solicitud> s = this.service.findById(id);
         if (s.isEmpty()) {
