@@ -23,7 +23,7 @@ public class EstadoSolicitudServiceImpl extends CommonServiceImpl<EstadoSolicitu
     }
 
     @Override
-    public Estado findAllEstados() {
+    public List<Estado> findAllEstados() {
         return repository.findAllEstados();
     }
 }

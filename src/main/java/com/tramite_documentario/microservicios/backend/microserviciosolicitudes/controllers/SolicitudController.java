@@ -222,4 +222,34 @@ public class SolicitudController {
             solicitudPdfView.export(response);
         }
     }
+
+    @GetMapping("/listar-estados/{idSolicitud}")
+    public ResponseEntity listarEstados(@PathVariable Long idSolicitud){
+        List<Estado> estados = estadoSolicitudService.findAllEstados();
+        Optional<Solicitud> s = service.findById(idSolicitud);
+        List<Estado> estadosFinales = new ArrayList<>();
+        if (s.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        Solicitud solicitud = s.get();
+
+        List<EstadoSolicitud> estadoSolicitudes = solicitud.getEstadoSolicitudes();
+
+        for (Estado estado: estados){
+            boolean tieneEstado = false;
+            for (EstadoSolicitud estadoSolicitud: estadoSolicitudes){
+                if (estadoSolicitud.getEstado().getNombre().equals(estado.getNombre())){
+                    tieneEstado = true;
+                    break;
+                }
+            }
+
+            if (!tieneEstado){
+                estadosFinales.add(estado);
+            }
+        }
+        return ResponseEntity.ok(estadosFinales);
+
+    }
 }

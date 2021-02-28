@@ -16,5 +16,5 @@ public interface EstadoSolicitudRepository extends PagingAndSortingRepository<Es
     public Estado findEstadoById(Long idEstado);
 
     @Query("select e from Estado e")
-    public Estado findAllEstados();
+    public List<Estado> findAllEstados();
 }

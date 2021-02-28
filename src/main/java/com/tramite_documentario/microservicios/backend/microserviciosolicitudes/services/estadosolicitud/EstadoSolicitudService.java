@@ -11,5 +11,5 @@ public interface EstadoSolicitudService extends CommonService<EstadoSolicitud> {
 
     public Estado findEstadoById(Long idEstado);
 
-    public Estado findAllEstados();
+    public List<Estado> findAllEstados();
 }
