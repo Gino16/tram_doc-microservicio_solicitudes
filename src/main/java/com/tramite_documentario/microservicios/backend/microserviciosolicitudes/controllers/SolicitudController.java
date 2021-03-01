@@ -189,16 +189,19 @@ public class SolicitudController {
         estadoSolicitud.setEstado(estado);
         String descripcion = request.getParameter("descripcion");
         estadoSolicitud.setDescripcion(descripcion);
-        
-        if (documento != null || !Objects.requireNonNull(documento).isEmpty()){
-            Archivo archivo = new Archivo();
-            archivo.setFile(documento.getBytes());
-            //Por defecto un numero de archivo que sera el tipo RESPUESTA
-            TipoArchivo tipoArchivo = archivoFeignClient.verTipoArchivo(1L);
-            archivo.setTipoArchivo(tipoArchivo);
-            archivo.setDescripcion("RESPUESTA");
-            archivo.setIdSolicitud(idSolicitud);
-            archivoFeignClient.guardar(archivo);
+
+        if (documento != null){
+            if (!documento.isEmpty()){
+                Archivo archivo = new Archivo();
+                archivo.setFile(documento.getBytes());
+                //Por defecto un numero de archivo que sera el tipo RESPUESTA
+                TipoArchivo tipoArchivo = archivoFeignClient.verTipoArchivo(1L);
+                archivo.setTipoArchivo(tipoArchivo);
+                archivo.setDescripcion("RESPUESTA");
+                archivo.setIdSolicitud(idSolicitud);
+                archivoFeignClient.guardar(archivo);
+            }
+
         }
         solicitud.addEstadoSolicitud(estadoSolicitudService.save(estadoSolicitud));
         return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(solicitud));
