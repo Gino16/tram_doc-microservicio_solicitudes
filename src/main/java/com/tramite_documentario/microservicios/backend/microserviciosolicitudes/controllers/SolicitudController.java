@@ -253,6 +253,10 @@ public class SolicitudController {
                 }
             }
 
+            if (aprobadoRechazado){
+                break;
+            }
+
 
             if (!tieneEstado){
                 estadosFinales.add(estado);
