@@ -241,12 +241,18 @@ public class SolicitudController {
 
         for (Estado estado: estados){
             boolean tieneEstado = false;
+            boolean aprobadoRechazado = false;
             for (EstadoSolicitud estadoSolicitud: estadoSolicitudes){
+                if (estadoSolicitud.getEstado().getNombre().equals("Aprobado") || estadoSolicitud.getEstado().getNombre().equals("Rechazado")){
+                    aprobadoRechazado = true;
+                    break;
+                }
                 if (estadoSolicitud.getEstado().getNombre().equals(estado.getNombre())){
                     tieneEstado = true;
                     break;
                 }
             }
+
 
             if (!tieneEstado){
                 estadosFinales.add(estado);
