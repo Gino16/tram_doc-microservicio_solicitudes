@@ -16,5 +16,4 @@ public class MicroservicioSolicitudesApplication {
     public static void main(String[] args) {
         SpringApplication.run(MicroservicioSolicitudesApplication.class, args);
     }
-
 }

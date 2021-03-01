@@ -34,6 +34,7 @@ public class Solicitud {
     @Transient
     private List<Persona> personasReceptoras;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     @OneToMany(mappedBy = "solicitud")
     private List<EstadoSolicitud> estadoSolicitudes;
 
