@@ -1,6 +1,7 @@
 package com.tramite_documentario.microservicios.backend.microserviciosolicitudes.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class EstadoSolicitud {
     @JoinColumn(name = "id_solicitud")
     private Solicitud solicitud;
 
+    @JsonIgnoreProperties("hibernateLazyInitializer")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_estado")
     private Estado estado;
