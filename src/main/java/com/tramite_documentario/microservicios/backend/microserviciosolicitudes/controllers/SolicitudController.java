@@ -254,6 +254,7 @@ public class SolicitudController {
             }
 
             if (aprobadoRechazado){
+                estadosFinales.add(estadoSolicitudService.findEstadoById(2L));
                 break;
             }
 
