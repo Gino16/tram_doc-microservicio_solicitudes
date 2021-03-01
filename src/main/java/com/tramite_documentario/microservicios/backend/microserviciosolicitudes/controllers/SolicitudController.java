@@ -189,8 +189,8 @@ public class SolicitudController {
         estadoSolicitud.setEstado(estado);
         String descripcion = request.getParameter("descripcion");
         estadoSolicitud.setDescripcion(descripcion);
-
-        if (documento != null || !documento.isEmpty()){
+        
+        if (documento != null || !Objects.requireNonNull(documento).isEmpty()){
             Archivo archivo = new Archivo();
             archivo.setFile(documento.getBytes());
             //Por defecto un numero de archivo que sera el tipo RESPUESTA
