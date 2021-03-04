@@ -42,6 +42,28 @@ public class Solicitud {
     @Transient
     private List<Archivo> archivos;
 
+
+    private String codigoFirma;
+
+    private String firma;
+
+    public String getFirma() {
+        return firma;
+    }
+
+    public void setFirma(String firma) {
+        this.firma = firma;
+    }
+
+    public String getCodigoFirma() {
+        return codigoFirma;
+    }
+
+    public void setCodigoFirma(String codigoFirma) {
+        this.codigoFirma = codigoFirma;
+    }
+
+
     public Long getId() {
         return id;
     }

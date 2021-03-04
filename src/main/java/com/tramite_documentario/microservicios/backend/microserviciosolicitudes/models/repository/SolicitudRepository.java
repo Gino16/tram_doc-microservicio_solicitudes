@@ -4,4 +4,6 @@ import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface SolicitudRepository extends PagingAndSortingRepository<Solicitud, Long> {
+
+    public Solicitud findByCodigoFirmaIsLike(String codigoFirma);
 }

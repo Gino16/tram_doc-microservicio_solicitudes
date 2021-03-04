@@ -2,6 +2,7 @@ package com.tramite_documentario.microservicios.backend.microserviciosolicitudes
 
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
+import com.lowagie.text.alignment.HorizontalAlignment;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -23,14 +24,25 @@ public class SolicitudPdfView {
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
-
+        document.setMargins(0, 0, 0, 0);
         PdfWriter.getInstance(document, response.getOutputStream());
-
         document.open();
+        if (solicitud.getFirma() != null){
+            Table tablaFirma = new Table(2);
+            tablaFirma.setWidths(new float[] {10, 10});
+            tablaFirma.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+            Cell celda = new Cell(new Paragraph("FIRMADO DIGITALMENTE"));
+            celda.setBackgroundColor(Color.CYAN);
+            celda.setColspan(2);
+            tablaFirma.addCell(celda);
+            tablaFirma.setSpacing(10);
+            document.add(tablaFirma);
+        }
         Paragraph titlePdf = new Paragraph("SOLICITUD DE " + solicitud.getTipoSolicitud().getNombre().toUpperCase(Locale.ROOT));
         titlePdf.setAlignment(Element.ALIGN_CENTER);
         titlePdf.setSpacingAfter(20);
         document.add(titlePdf);
+
 
         //Tabla de Solicitante
         PdfPTable tableSolicitante = new PdfPTable(2);

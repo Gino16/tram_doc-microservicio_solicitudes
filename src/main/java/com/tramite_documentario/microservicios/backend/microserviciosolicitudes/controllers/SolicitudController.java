@@ -9,6 +9,7 @@ import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.services.personasolicitud.PersonaSolicitudService;
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.services.solicitud.SolicitudService;
 import com.tramite_documentario.microservicios.backend.microserviciosolicitudes.view.pdf.SolicitudPdfView;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -133,6 +136,10 @@ public class SolicitudController {
         //Capturando los archivos anexados en solicitud
         List<Archivo> archivos = archivoFeignClient.listarArchivosBySolicitud(solicitud.getId());
 
+        for (Archivo archivo: archivos){
+            archivo.setFile(null);
+        }
+
         solicitud.setArchivos(archivos);
     }
 
@@ -211,9 +218,7 @@ public class SolicitudController {
     @GetMapping({"/exportar/{id}", "/exportar/{id}/"})
     public void exportarPDF(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Optional<Solicitud> s = this.service.findById(id);
-        if (s.isEmpty()) {
-            return;
-        } else {
+        if (s.isPresent()) {
             Solicitud solicitud = s.get();
             setInfoArchivo(solicitud);
             response.setContentType("application/pdf");
@@ -265,5 +270,41 @@ public class SolicitudController {
         }
         return ResponseEntity.ok(estadosFinales);
 
+    }
+
+    @PostMapping("/firmar/{idSolicitud}")
+    public ResponseEntity<?> firmarSolicitud(@PathVariable Long idSolicitud) throws UnsupportedEncodingException, MessagingException {
+        Random random = new Random();
+        Optional<Solicitud> s = this.service.findById(idSolicitud);
+
+        if (s.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        Solicitud solicitud = s.get();
+        this.setInfoArchivo(solicitud);
+
+        String id = String.format("%04d", random.nextInt(10000));
+        System.out.println(solicitud.getPersonasReceptoras());
+        Persona receptor = solicitud.getPersonasReceptoras().get(0);
+        solicitud.setCodigoFirma(id);
+        Solicitud solicitudNew = this.service.save(solicitud);
+        this.service.sendFiles(receptor, id);
+
+        return ResponseEntity.ok(solicitudNew);
+    }
+
+    @PostMapping("/firmar")
+    public ResponseEntity<?> confirmarFirma(HttpServletRequest request){
+        String codigo = request.getParameter("codigo");
+        Solicitud solicitud = this.service.findByCodigoFirmaIsLike(codigo);
+        if (solicitud == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        String token = RandomString.make(32);
+        solicitud.setCodigoFirma(null);
+        solicitud.setFirma(token);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(solicitud));
     }
 }
