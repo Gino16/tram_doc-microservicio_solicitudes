@@ -3,6 +3,7 @@ package com.tramite_documentario.microservicios.backend.microserviciosolicitudes
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.alignment.HorizontalAlignment;
+import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -27,15 +28,23 @@ public class SolicitudPdfView {
         document.setMargins(0, 0, 0, 0);
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
-        if (solicitud.getFirma() != null){
-            Table tablaFirma = new Table(2);
-            tablaFirma.setWidths(new float[] {10, 10});
-            tablaFirma.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-            Cell celda = new Cell(new Paragraph("FIRMADO DIGITALMENTE"));
-            celda.setBackgroundColor(Color.CYAN);
-            celda.setColspan(2);
-            tablaFirma.addCell(celda);
-            tablaFirma.setSpacing(10);
+        if (solicitud.getFirma() != null) {
+            PdfPTable tablaFirma = new PdfPTable(1);
+            tablaFirma.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            tablaFirma.setWidthPercentage(160 / 5.23f);
+            PdfPCell cell = new PdfPCell(new Phrase("FIRMADO DIGITALMENTE"));
+            cell.setBorderWidth(2f);
+            tablaFirma.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(solicitud.getPersonasReceptoras().get(0).getApellidos() + ", " + solicitud.getPersonasReceptoras().get(0).getNombre()));
+            cell.setBorderWidth(2f);
+            tablaFirma.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(solicitud.getFirma()));
+            cell.setBorderWidth(2f);
+            tablaFirma.addCell(cell);
+
+            tablaFirma.setSpacingAfter(20);
             document.add(tablaFirma);
         }
         Paragraph titlePdf = new Paragraph("SOLICITUD DE " + solicitud.getTipoSolicitud().getNombre().toUpperCase(Locale.ROOT));
@@ -47,7 +56,7 @@ public class SolicitudPdfView {
         //Tabla de Solicitante
         PdfPTable tableSolicitante = new PdfPTable(2);
         tableSolicitante.setSpacingAfter(20);
-        tableSolicitante.setWidths(new float[] {2f, 3.5f});
+        tableSolicitante.setWidths(new float[]{2f, 3.5f});
         PdfPCell titulo = null;
         PdfPCell cell = null;
         titulo = new PdfPCell(new Phrase("DATOS DEL SOLICITANTE "));
@@ -73,7 +82,7 @@ public class SolicitudPdfView {
         //Tabla de datos de Destinatarios
         PdfPTable tableDestinatarios = new PdfPTable(4);
         tableDestinatarios.setSpacingAfter(20);
-        tableDestinatarios.setWidths(new float[] {1, 2, 1, 2f});
+        tableDestinatarios.setWidths(new float[]{1, 2, 1, 2f});
         //Titulo para la tabla
         titulo = new PdfPCell(new Phrase("DATOS DE RECEPTORES"));
         titulo.setPadding(8f);
@@ -89,7 +98,7 @@ public class SolicitudPdfView {
         tableDestinatarios.addCell("EMAIL");
 
         //Llenando cada fila de personas Receptoras
-        for (Persona receptora: solicitud.getPersonasReceptoras()){
+        for (Persona receptora : solicitud.getPersonasReceptoras()) {
             tableDestinatarios.addCell(receptora.getDniRuc());
             tableDestinatarios.addCell(receptora.getApellidos() + ", " + receptora.getNombre());
             tableDestinatarios.addCell(receptora.getPuesto().getNombre());
@@ -100,7 +109,7 @@ public class SolicitudPdfView {
         //Tabla de estados
         PdfPTable tableEstados = new PdfPTable(3);
         tableEstados.setSpacingAfter(20);
-        tableEstados.setWidths(new float[] {1.5f, 1.5f, 2.5f});
+        tableEstados.setWidths(new float[]{1.5f, 1.5f, 2.5f});
         //Titulo de la tabla
         titulo = new PdfPCell(new Phrase("Estado de la Solicitud"));
         titulo.setPadding(8f);
@@ -113,7 +122,7 @@ public class SolicitudPdfView {
         tableEstados.addCell("Descripcion");
 
 
-        for (EstadoSolicitud estadoSolicitud: solicitud.getEstadoSolicitudes()){
+        for (EstadoSolicitud estadoSolicitud : solicitud.getEstadoSolicitudes()) {
             tableEstados.addCell(estadoSolicitud.getEstado().getNombre());
             tableEstados.addCell(estadoSolicitud.getFecha().toString());
             tableEstados.addCell(estadoSolicitud.getDescripcion());
